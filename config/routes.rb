@@ -8,7 +8,24 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :transactions, only: [ :create ]
+  resources :transactions, only: [ :create ] do
+    collection do
+      post :deposit
+      post :withdraw
+      post :transfer
+    end
+  end
+  resources :wallets do
+    collection do
+      get :check_balance
+    end
+  end
+  resources :stocks do
+    collection do
+      post :buy
+      post :sell
+    end
+  end
   resources :users, only: [:create]
   resources :teams, only: [:create]
   resources :sessions, only: [:create]

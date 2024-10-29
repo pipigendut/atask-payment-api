@@ -3,12 +3,23 @@ require 'json'
 require 'uri'
 
 class LatestStockPrice
-  BASE_URL = ENV['RAPIDAPI_HOST'] || 'https://latest-stock-price.p.rapidapi.com'
-  RAPIDAPI_HOST = ENV['RAPIDAPI_HOST'] || 'latest-stock-price.p.rapidapi.com'
-  RAPIDAPI_KEY = ENV['RAPIDAPI_KEY'] || '4a1c68bbdcmsh7d145bcfbc64adep133fe3jsn776586d98c62'
+  BASE_URL = ENV.fetch('RAPIDAPI_HOST', 'https://latest-stock-price.p.rapidapi.com')
+  RAPIDAPI_HOST = ENV.fetch('RAPIDAPI_HOST', 'latest-stock-price.p.rapidapi.com')
+  RAPIDAPI_KEY = ENV.fetch('RAPIDAPI_KEY', '4a1c68bbdcmsh7d145bcfbc64adep133fe3jsn776586d98c62')
 
-  def self.fetch_any
-    uri = URI("#{BASE_URL}/any")
+  def self.fetch_stocks
+    fetch_data('/any')
+  end
+
+  def self.fetch_stock_by_identifier(identifier)
+    stocks = fetch_data('/any')
+    stocks.find { |stock| stock['identifier'] == identifier }
+  end
+
+  private
+
+  def self.fetch_data(endpoint)
+    uri = URI("#{BASE_URL}#{endpoint}")
     request = Net::HTTP::Get.new(uri)
     request['x-rapidapi-host'] = RAPIDAPI_HOST
     request['x-rapidapi-key'] = RAPIDAPI_KEY
@@ -20,8 +31,6 @@ class LatestStockPrice
 
     handle_response(response)
   end
-
-  private
 
   def self.handle_response(response)
     case response

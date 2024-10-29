@@ -1,4 +1,6 @@
 class TeamsController < ApplicationController
+  skip_before_action :authorize_request, only: [:create]
+
   def create
     team = Team.new(team_params)
 

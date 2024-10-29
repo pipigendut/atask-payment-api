@@ -8,14 +8,14 @@ default: &default
 
 development:
   <<: *default
-  database: payment-api-db
+  database: atask-payment-api-db
 
 test:
   <<: *default
-  database: wallet_system_api_test
+  database: atask-payment-api-db-test
 
 production:
   <<: *default
-  database: wallet_system_api_production
-  username: your_pg_username
-  password: <%= ENV['WALLET_SYSTEM_DATABASE_PASSWORD'] %>
+  database: atask-payment-api-db-prod
+  username: <%= ENV['PAYMENT_API_DATABASE_USERNAME'] %>
+  password: <%= ENV['PAYMENT_API_DATABASE_PASSWORD'] %>

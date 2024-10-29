@@ -5,7 +5,7 @@ class CreateTransactions < ActiveRecord::Migration[7.2]
       t.string :transaction_type
       t.string :type
 
-      t.references :stock, foreign_key: { to_table: :transactions }, index: true
+      t.references :user, null: false, foreign_key: true
       t.references :source_wallet, foreign_key: { to_table: :wallets }, index: true
       t.references :target_wallet, foreign_key: { to_table: :wallets }, index: true
 

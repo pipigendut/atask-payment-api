@@ -15,12 +15,12 @@ class ApplicationController < ActionController::API
     payload = Auth::AuthManager.decode_token(token)
     return nil unless payload
 
-    user_type = payload['user_type']
+    type = payload['type']
     user_id = payload['user_id']
 
-    if user_type == 'User'
+    if type == 'user'
       User.find_by(id: user_id)
-    elsif user_type == 'Team'
+    elsif type == 'team'
       Team.find_by(id: user_id)
     end
   end
