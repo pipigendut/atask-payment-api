@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: admin
+  password: password
+  host: localhost
+
+development:
+  <<: *default
+  database: payment-api-db
+
+test:
+  <<: *default
+  database: wallet_system_api_test
+
+production:
+  <<: *default
+  database: wallet_system_api_production
+  username: your_pg_username
+  password: <%= ENV['WALLET_SYSTEM_DATABASE_PASSWORD'] %>
