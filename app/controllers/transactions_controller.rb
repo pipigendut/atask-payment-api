@@ -47,6 +47,10 @@ class TransactionsController < ApplicationController
     amount = params.require(:amount).to_f
     target_wallet = Wallet.find(params[:target_wallet_id])
 
+    if target_wallet.id == current_user.wallet.id
+      return render json: { error: "Cannot transfer to self wallet" }, status: :unprocessable_entity
+    end
+
     ActiveRecord::Base.transaction do
       current_user.wallet.withdraw(amount)
       target_wallet.deposit(amount)
@@ -62,6 +66,8 @@ class TransactionsController < ApplicationController
 
     render json: { message: "Transfer successful" }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  rescue ArgumentError => e
     render json: { error: e.message }, status: :unprocessable_entity
   rescue => e
     render json: { error: "An unexpected error occurred" }, status: :internal_server_error
