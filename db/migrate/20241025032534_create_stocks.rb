@@ -5,7 +5,7 @@ class CreateStocks < ActiveRecord::Migration[7.2]
       t.string :identifier
       t.string :status
       t.json :stock_data
-      t.references :transaction, foreign_key: { to_table: :transactions }, index: true
+      t.references :user, null: false, foreign_key: true
 
       t.timestamps
     end

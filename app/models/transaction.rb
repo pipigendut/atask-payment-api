@@ -2,10 +2,9 @@ class Transaction < ApplicationRecord
   VALID_TRANSACTION_TYPES = %w[deposit withdraw transfer buy sell].freeze
 
   belongs_to :user
-  belongs_to :source_wallet, class_name: 'Wallet', optional: true
-  belongs_to :target_wallet, class_name: 'Wallet', optional: true
-
-  has_one :stock, dependent: :destroy, required: false
+  belongs_to :stock, optional: true
+  belongs_to :source_wallet, class_name: "Wallet", optional: true
+  belongs_to :target_wallet, class_name: "Wallet", optional: true
 
   validates :amount, numericality: { greater_than: 0 }
   validates :transaction_type, inclusion: { in: VALID_TRANSACTION_TYPES }
@@ -34,14 +33,14 @@ class Transaction < ApplicationRecord
 
   def validate_source_and_target_wallets
     case transaction_type
-    when 'deposit'
+    when "deposit"
       errors.add(:target_wallet, "can't be blank") if target_wallet.nil?
-    when 'withdraw'
+    when "withdraw"
       errors.add(:source_wallet, "can't be blank") if source_wallet.nil?
-    when 'transfer'
+    when "transfer"
       errors.add(:source_wallet, "can't be blank") if source_wallet.nil?
       errors.add(:target_wallet, "can't be blank") if target_wallet.nil?
-    when 'buy', 'sell'
+    when "buy", "sell"
       errors.add(:source_wallet, "can't be blank") if source_wallet.nil?
     end
   end

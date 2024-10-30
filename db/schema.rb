@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_25_032636) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_25_032535) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,10 +19,10 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_25_032636) do
     t.string "identifier"
     t.string "status"
     t.json "stock_data"
-    t.bigint "transaction_id"
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["transaction_id"], name: "index_stocks_on_transaction_id"
+    t.index ["user_id"], name: "index_stocks_on_user_id"
   end
 
   create_table "teams", force: :cascade do |t|
@@ -38,11 +38,13 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_25_032636) do
     t.string "transaction_type"
     t.string "type"
     t.bigint "user_id", null: false
+    t.bigint "stock_id"
     t.bigint "source_wallet_id"
     t.bigint "target_wallet_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["source_wallet_id"], name: "index_transactions_on_source_wallet_id"
+    t.index ["stock_id"], name: "index_transactions_on_stock_id"
     t.index ["target_wallet_id"], name: "index_transactions_on_target_wallet_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
@@ -64,7 +66,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_25_032636) do
     t.index ["walletable_type", "walletable_id"], name: "index_wallets_on_walletable"
   end
 
-  add_foreign_key "stocks", "transactions"
+  add_foreign_key "stocks", "users"
+  add_foreign_key "transactions", "stocks"
   add_foreign_key "transactions", "users"
   add_foreign_key "transactions", "wallets", column: "source_wallet_id"
   add_foreign_key "transactions", "wallets", column: "target_wallet_id"

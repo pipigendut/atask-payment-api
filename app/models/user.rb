@@ -1,8 +1,8 @@
 class User < ApplicationRecord
   has_secure_password
-  has_many :transactions, dependent: :destroy
-  has_many :stocks, through: :transactions
+
   has_one :wallet, as: :walletable, dependent: :destroy
+  has_many :stocks
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
